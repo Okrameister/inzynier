@@ -6,13 +6,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.mukesh.config.JwtProvider;
-import com.mukesh.models.User;
+import com.mukesh.models.AppUser;
 import com.mukesh.repository.UserRepository;
 import com.mukesh.request.LoginRequest;
 import com.mukesh.response.AuthResponse;
@@ -34,24 +31,23 @@ public class AuthController {
 	@Autowired	
 	private CustomUserDetailsService customUserDetails;
 	
-	
-//	/auth/signup
+
 	@PostMapping("/signup")
-	public AuthResponse createUser(@RequestBody User user) throws Exception {
+	public AuthResponse createUser(@RequestBody AppUser user) throws Exception {
 		
-		User isExist = userRepository.findByEmail(user.getEmail());
+		AppUser isExist = userRepository.findByEmail(user.getEmail());
 		if(isExist!= null) {
 			throw new Exception("this email already used with nother account");
 		}
 		
-		User newUser= new User();
+		AppUser newUser= new AppUser();
 
 		newUser.setEmail(user.getEmail());
 		newUser.setFirstName(user.getFirstName());
 		newUser.setLastName(user.getLastName());
 		newUser.setPassword(passwordEncoder.encode(user.getPassword()));
 		
-		User savedUser = userRepository.save(newUser);
+		AppUser savedUser = userRepository.save(newUser);
 		
 		Authentication  authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(), savedUser.getPassword());
 		

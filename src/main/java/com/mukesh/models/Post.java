@@ -3,31 +3,40 @@ package com.mukesh.models;
 import java.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import java.util.Set;
+
+import jakarta.persistence.*;
+
 
 @Entity
 public class Post {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	private String  caption;
+	private String caption;
 	private String image;
 	private String video;
 
 	@ManyToOne
-	private User user;
-	
-	@OneToMany
-	private List<User>liked = new ArrayList<>();
+	private AppUser user;
+
+	@ManyToMany
+	@JoinTable(
+			name = "post_likes",
+			joinColumns = @JoinColumn(name = "post_id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id")
+	)
+	private Set<AppUser> liked = new HashSet<>();
 	private LocalDateTime createdAt;
-	
-	@OneToMany
+
+	@ManyToMany
+	@JoinTable(
+			name = "post_comments",
+			joinColumns = @JoinColumn(name = "post_id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id")
+	)
 	private List<Comment> comments = new ArrayList<>();
 
 	public Integer getId() {
@@ -62,19 +71,19 @@ public class Post {
 		this.video = video;
 	}
 
-	public User getUser() {
+	public AppUser getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(AppUser user) {
 		this.user = user;
 	}
 
-	public List<User> getLiked() {
+	public Set<AppUser> getLiked() {
 		return liked;
 	}
 
-	public void setLiked(List<User> liked) {
+	public void setLiked(Set<AppUser> liked) {
 		this.liked = liked;
 	}
 
@@ -94,8 +103,8 @@ public class Post {
 		this.comments = comments;
 	}
 
-	public Post(Integer id, String caption, String image, String video, User user, List<User> liked,
-			LocalDateTime createdAt, List<Comment> comments) {
+	public Post(Integer id, String caption, String image, String video, AppUser user, Set<AppUser> liked,
+                LocalDateTime createdAt, List<Comment> comments) {
 		super();
 		this.id = id;
 		this.caption = caption;

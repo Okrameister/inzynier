@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mukesh.config.JwtProvider;
-import com.mukesh.models.User;
+import com.mukesh.models.AppUser;
 import com.mukesh.repository.UserRepository;
 @Service
 public class UserServiceImplementation implements UserService{
@@ -16,21 +16,21 @@ public class UserServiceImplementation implements UserService{
 	UserRepository userRepository ;
 
 	@Override
-	public User registerUser(User user) {
-		User newUser= new User();
+	public AppUser registerUser(AppUser user) {
+		AppUser newUser= new AppUser();
 //		newUser.setId(user.getId());
 		newUser.setEmail(user.getEmail());
 		newUser.setFirstName(user.getFirstName());
 		newUser.setLastName(user.getLastName());
 		newUser.setPassword(user.getPassword());
 		
-		User savedUser = userRepository.save(newUser);
+		AppUser savedUser = userRepository.save(newUser);
 		return savedUser;
 	}
 
 	@Override
-	public User findUserById(Integer userId) throws Exception {
-		Optional<User> user = userRepository.findById(userId);
+	public AppUser findUserById(Integer userId) throws Exception {
+		Optional<AppUser> user = userRepository.findById(userId);
 		if (user.isPresent()) {
 			return user.get();
 		}
@@ -39,16 +39,16 @@ public class UserServiceImplementation implements UserService{
 	}
 
 	@Override
-	public User findUserByEmail(String email) {
-		User user = userRepository.findByEmail(email);
+	public AppUser findUserByEmail(String email) {
+		AppUser user = userRepository.findByEmail(email);
 		return user;
 	}
 
 	@Override
-	public User followUser(Integer reqUserId, Integer userId2) throws Exception {
+	public AppUser followUser(Integer reqUserId, Integer userId2) throws Exception {
 		
-		User reqUser = findUserById(reqUserId);
-		User user2 = findUserById(userId2);
+		AppUser reqUser = findUserById(reqUserId);
+		AppUser user2 = findUserById(userId2);
 		
 		user2.getFollowers().add(reqUser.getId());
 		reqUser.getFollowings().add(user2.getId());
@@ -60,13 +60,13 @@ public class UserServiceImplementation implements UserService{
 	}
 
 	@Override
-	public User updateUser(User user,Integer userId) throws Exception {
-		Optional<User> user1 = userRepository.findById(userId);
+	public AppUser updateUser(AppUser user, Integer userId) throws Exception {
+		Optional<AppUser> user1 = userRepository.findById(userId);
 
 		if (user1.isEmpty()) {
 			throw new Exception("User not exist with id: " + userId);
 		}
-		User oldUser = user1.get();
+		AppUser oldUser = user1.get();
 
 		if (user.getFirstName() != null) {
 			oldUser.setFirstName(user.getFirstName());
@@ -84,12 +84,12 @@ public class UserServiceImplementation implements UserService{
 			oldUser.setGender(user.getGender());
 		}
 		
-		User updatedUser = userRepository.save(oldUser);
+		AppUser updatedUser = userRepository.save(oldUser);
 		return updatedUser;
 	}
 
 	@Override
-	public List<User> searchUser(String query) {
+	public List<AppUser> searchUser(String query) {
 		
 		
 		
@@ -97,9 +97,9 @@ public class UserServiceImplementation implements UserService{
 	}
 
 	@Override
-	public User findUserByJwt(String jwt) {
+	public AppUser findUserByJwt(String jwt) {
 		String email = JwtProvider.getEmailFromJwtToken(jwt);
-		User user  =userRepository.findByEmail(email);
+		AppUser user  =userRepository.findByEmail(email);
 		return user;
 	}
 	

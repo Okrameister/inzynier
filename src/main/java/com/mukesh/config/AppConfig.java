@@ -16,14 +16,15 @@ public class AppConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.sessionManagement(
-        		management -> management.sessionCreationPolicy
-        		(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/**").authenticated()
-                .anyRequest().permitAll())
-            .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
-            .csrf(csrf -> csrf.disable());
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(management -> management
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/auth/signup", "/auth/signin").permitAll()
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll())
+                .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class);
 
         return http.build();
     }

@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.mukesh.models.User;
+import com.mukesh.models.AppUser;
 import com.mukesh.repository.UserRepository;
 
 @Service
@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByEmail(username);
+		AppUser user = userRepository.findByEmail(username);
 		
 		if(user==null) {
 			throw new UsernameNotFoundException(" user not found with email "+username);

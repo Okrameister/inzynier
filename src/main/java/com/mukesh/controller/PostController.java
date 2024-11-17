@@ -1,6 +1,8 @@
 package com.mukesh.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mukesh.models.Post;
-import com.mukesh.models.User;
+import com.mukesh.models.AppUser;
 import com.mukesh.response.ApiResponse;
 import com.mukesh.service.PostService;
 import com.mukesh.service.UserService;
@@ -33,7 +35,7 @@ public class PostController {
     public ResponseEntity<Post> createPost(@RequestHeader("Authorization") String jwt,
     		@RequestBody Post post) throws Exception {
       
-    	User reqUser = userService.findUserByJwt(jwt);
+    	AppUser reqUser = userService.findUserByJwt(jwt);
     	Post createdPost = postService.createNewPost(post, reqUser.getId());
         return new ResponseEntity<>(createdPost, HttpStatus.ACCEPTED);
     }
@@ -41,7 +43,7 @@ public class PostController {
     @DeleteMapping("api/posts/{postId}")
     public ResponseEntity<ApiResponse> deletePost(@PathVariable Integer postId,
     		@RequestHeader("Authorization") String jwt) throws Exception {
-    	User reqUser = userService.findUserByJwt(jwt);
+    	AppUser reqUser = userService.findUserByJwt(jwt);
         String message = postService.deletePost(postId, reqUser.getId());
         ApiResponse res = new ApiResponse(message, true);
         return new ResponseEntity<ApiResponse>(res, HttpStatus.OK);
@@ -68,24 +70,31 @@ public class PostController {
     @PutMapping("api/posts/save/{postId}")
     public ResponseEntity<Post> savedPostHandler(@PathVariable Integer postId,
     		@RequestHeader("Authorization") String jwt) throws Exception {
-    	User reqUser = userService.findUserByJwt(jwt);
+    	AppUser reqUser = userService.findUserByJwt(jwt);
         Post post = postService.savedPost(postId, reqUser.getId());
         return new ResponseEntity<Post>(post, HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("api/posts/like/{postId}")
-    public ResponseEntity<Post> likePostHandler(@PathVariable Integer postId,
-    		@RequestHeader("Authorization") String jwt) throws Exception {
-    	User reqUser = userService.findUserByJwt(jwt);
-        Post post = postService.likePost(postId, reqUser.getId());
-        return  new ResponseEntity<Post>(post, HttpStatus.ACCEPTED);
+    @PutMapping("/api/posts/like/{postId}")
+    public ResponseEntity<Map<String, Object>> toggleLikePostHandler(@PathVariable Integer postId,
+                                                                     @RequestHeader("Authorization") String jwt) throws Exception {
+        AppUser reqUser = userService.findUserByJwt(jwt);
+        Post post = postService.toggleLikePost(postId, reqUser.getId());
+        boolean isLiked = post.getLiked().contains(reqUser);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("post", post);
+        response.put("isLiked", isLiked);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
 }

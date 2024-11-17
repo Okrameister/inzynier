@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mukesh.models.Post;
-import com.mukesh.models.User;
+import com.mukesh.models.AppUser;
 import com.mukesh.repository.PostRepository;
 import com.mukesh.repository.UserRepository;
 
@@ -27,7 +27,7 @@ public class PostServiceImplementation implements PostService{
 	@Override
 	public Post createNewPost(Post post, Integer userId) throws Exception {
 		
-		User user = userService.findUserById(userId);
+		AppUser user = userService.findUserById(userId);
 	
 		Post newPost = new Post();
 		newPost.setCaption(post.getCaption());
@@ -41,7 +41,7 @@ public class PostServiceImplementation implements PostService{
 	@Override
 	public String deletePost(Integer postId, Integer userId) throws Exception {
 		Post post=findPostById(postId);
-		User user = userService.findUserById(userId);
+		AppUser user = userService.findUserById(userId);
 		
 		if(post.getUser().getId()!=user.getId()) {
 			throw new Exception("your can't delete another post");
@@ -76,7 +76,7 @@ public class PostServiceImplementation implements PostService{
 	@Override
 	public Post savedPost(Integer postId, Integer userId) throws Exception {
 		Post post=findPostById(postId);
-		User user = userService.findUserById(userId);
+		AppUser user = userService.findUserById(userId);
 		
 		if(user.getSavedPost().contains(post)) {
 			user.getSavedPost().remove(post);
@@ -89,21 +89,24 @@ public class PostServiceImplementation implements PostService{
 	}
 
 	@Override
-	public Post likePost(Integer postId, Integer userId) throws Exception {
-		Post post=findPostById(postId);
-		User user = userService.findUserById(userId);
-		
-		if(post.getLiked().contains(user)) {
+	public Post toggleLikePost(Integer postId, Integer userId) throws Exception {
+		Post post = postRepository.findById(postId)
+				.orElseThrow(() -> new Exception("Post not found"));
+		AppUser user = userRepository.findById(userId)
+				.orElseThrow(() -> new Exception("User not found"));
+
+		if (post.getLiked().contains(user)) {
+			// Usuń polubienie
 			post.getLiked().remove(user);
-		}else {
+		} else {
+			// Dodaj polubienie
 			post.getLiked().add(user);
 		}
-		
-		post.getLiked().add(user);
-		
-		
-		return postRepository.save(post);
+
+		postRepository.save(post);
+		return post;
 	}
+
 
 
 }

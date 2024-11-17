@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 
 @Entity
-public class User {
+public class AppUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
@@ -26,7 +26,7 @@ public class User {
 	
 	
 	
-	public User() {
+	public AppUser() {
 		
 	}
 
@@ -140,8 +140,8 @@ public class User {
 
 
 
-	public User(Integer id, String firstName, String lastName, String email, String password, String gender,
-			List<Integer> followers, List<Integer> followings, List<Post> savedPost) {
+	public AppUser(Integer id, String firstName, String lastName, String email, String password, String gender,
+				   List<Integer> followers, List<Integer> followings, List<Post> savedPost) {
 		super();
 		this.id = id;
 		this.firstName = firstName;

@@ -20,10 +20,6 @@ public interface PostService {
 	List<Post> findAllPost();
 	
 	Post savedPost(Integer postId, Integer userId) throws Exception;
-	
-	Post likePost(Integer postId, Integer userId) throws Exception;
 
-	
-	
-
+	Post toggleLikePost(Integer postId, Integer userId) throws Exception;
 }

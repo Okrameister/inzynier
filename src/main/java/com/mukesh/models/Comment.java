@@ -20,10 +20,10 @@ public class Comment {
 	private String content;
 	
 	@ManyToOne
-	private User user;
-	
+	private AppUser user;
+
 	@ManyToMany
-	private List<User>liked = new ArrayList<>();
+	private List<AppUser>liked = new ArrayList<>();
 	
 	private LocalDateTime createdAt;
 
@@ -43,19 +43,19 @@ public class Comment {
 		this.content = content;
 	}
 
-	public User getUser() {
+	public AppUser getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(AppUser user) {
 		this.user = user;
 	}
 
-	public List<User> getLiked() {
+	public List<AppUser> getLiked() {
 		return liked;
 	}
 
-	public void setLiked(List<User> liked) {
+	public void setLiked(List<AppUser> liked) {
 		this.liked = liked;
 	}
 
@@ -67,7 +67,7 @@ public class Comment {
 		this.createdAt = createdAt;
 	}
 
-	public Comment(Integer id, String content, User user, List<User> liked, LocalDateTime createdAt) {
+	public Comment(Integer id, String content, AppUser user, List<AppUser> liked, LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.content = content;
