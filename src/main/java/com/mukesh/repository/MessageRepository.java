@@ -1,11 +1,9 @@
 package com.mukesh.repository;
 
-import com.mukesh.models.Message;
-import com.mukesh.models.AppUser;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.mukesh.models.Message;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    List<Message> findBySenderOrReceiver(AppUser sender, AppUser receiver);
+    List<Message> findByConversation_IdOrderByTimestamp(Long conversationId);
 }

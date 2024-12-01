@@ -1,98 +1,62 @@
 package com.mukesh.controller;
 
-import com.mukesh.models.AppUser;
-import com.mukesh.models.Message;
-import com.mukesh.repository.UserRepository;
-import com.mukesh.service.ChatService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
+import com.mukesh.request.ConversationRequest;
+import com.mukesh.request.MessageRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.mukesh.models.*;
+import com.mukesh.service.*;
 
 @RestController
 @RequestMapping("/api/chat")
 public class ChatController {
 
-    private final ChatService chatService;
-    private final UserRepository userRepository;
+    @Autowired
+    private ConversationService conversationService;
 
     @Autowired
-    public ChatController(ChatService chatService, UserRepository userRepository) {
-        this.chatService = chatService;
-        this.userRepository = userRepository;
+    private MessageService messageService;
+
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/conversations")
+    public Conversation createConversation(@RequestHeader("Authorization") String jwt,
+                                           @RequestBody ConversationRequest request) throws Exception {
+        AppUser user = userService.findUserByJwt(jwt);
+        List<Integer> userIds = request.getUserIds();
+        if (!userIds.contains(user.getId())) {
+            userIds.add(user.getId()); // Dodaj siebie do uczestników, jeśli nie został już dodany
+        }
+        return conversationService.createConversation(userIds, request.getName(), request.getIsGroup());
     }
 
-    @PostMapping("/send")
-    public Message sendMessage(@RequestBody SendMessageRequest request) {
-        // Pobieramy aktualnie zalogowanego użytkownika na podstawie emailu z requestu
-        String senderEmail = request.getSenderEmail();
-        AppUser sender = userRepository.findByEmail(senderEmail);
-        AppUser receiver = userRepository.findByEmail("kalinka.2002@gmail.com");
-
-        return chatService.sendMessage(sender, receiver, request.getContent());
+    @GetMapping("/conversations")
+    public List<Conversation> getUserConversations(@RequestHeader("Authorization") String jwt) throws Exception {
+        AppUser user = userService.findUserByJwt(jwt);
+        return conversationService.getUserConversations(user.getId());
     }
 
-    @GetMapping("/messages")
-    public List<Message> getMessages(@RequestBody GetMessagesRequest request) {
-        // Pobieramy aktualnie zalogowanego użytkownika na podstawie emailu z requestu
-        String userEmail = request.getUserEmail();
-        AppUser user1 = userRepository.findByEmail(userEmail);
-        AppUser user2 = userRepository.findByEmail(request.getOtherEmail());
-
-        return chatService.getMessages(user1, user2);
+    @PostMapping("/conversations/{conversationId}/messages")
+    public Message sendMessage(@RequestHeader("Authorization") String jwt,
+                               @PathVariable Long conversationId,
+                               @RequestBody MessageRequest request) throws Exception {
+        AppUser user = userService.findUserByJwt(jwt);
+        return messageService.sendMessage(conversationId, user, request.getContent());
     }
 
-    // DTO for the send message request
-    public static class SendMessageRequest {
-        private String senderEmail;
-        private String receiverEmail;
-        private String content;
+    @GetMapping("/conversations/{conversationId}/messages")
+    public List<Message> getMessages(@RequestHeader("Authorization") String jwt,
+                                     @PathVariable Long conversationId) throws Exception {
+        AppUser user = userService.findUserByJwt(jwt);
+        Conversation conversation = conversationService.getConversationById(conversationId);
 
-        public String getSenderEmail() {
-            return senderEmail;
+        if (!conversation.getParticipants().contains(user)) {
+            throw new Exception("User not part of the conversation");
         }
 
-        public void setSenderEmail(String senderEmail) {
-            this.senderEmail = senderEmail;
-        }
-
-        public String getReceiverEmail() {
-            return receiverEmail;
-        }
-
-        public void setReceiverEmail(String receiverEmail) {
-            this.receiverEmail = receiverEmail;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-    }
-
-    // DTO for the get messages request
-    public static class GetMessagesRequest {
-        private String userEmail;
-        private String otherEmail;
-
-        public String getUserEmail() {
-            return userEmail;
-        }
-
-        public void setUserEmail(String userEmail) {
-            this.userEmail = userEmail;
-        }
-
-        public String getOtherEmail() {
-            return otherEmail;
-        }
-
-        public void setOtherEmail(String otherEmail) {
-            this.otherEmail = otherEmail;
-        }
+        return messageService.getConversationMessages(conversationId);
     }
 }
