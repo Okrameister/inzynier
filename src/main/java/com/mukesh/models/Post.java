@@ -19,6 +19,7 @@ public class Post {
 	private String content;
 	private String image;
 	private String video;
+	private Integer groupId;
 
 	@ManyToOne
 	private AppUser user;
@@ -46,6 +47,14 @@ public class Post {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Integer groupId) {
+		this.groupId = groupId;
 	}
 
 	public String getCaption() {

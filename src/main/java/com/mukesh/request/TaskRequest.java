@@ -3,6 +3,7 @@ package com.mukesh.request;
 public class TaskRequest {
     private String title;
     private String description;
+    private Integer groupId;
 
     // Gettery i settery
     public String getTitle() {
@@ -20,4 +21,8 @@ public class TaskRequest {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public Integer getGroupId() {return groupId;}
+
+    public void setGroupId(Integer groupId){ this.groupId=groupId;}
 }

@@ -3,6 +3,7 @@ package com.mukesh.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,18 +62,23 @@ public class PostController {
         return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
     }
 
-    @GetMapping("api/posts")
-    public ResponseEntity<List<Post>> findAllPost() throws Exception {
+    @GetMapping("api/posts/group/{groupId}")
+    public ResponseEntity<List<Post>> findAllPost(@PathVariable Integer groupId) {
+
+
         List<Post> posts = postService.findAllPost();
-        return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
+
+        posts.removeIf(post -> !Objects.equals(post.getGroupId(), groupId));
+
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
+
 
     @PutMapping("api/posts/save/{postId}")
     public ResponseEntity<Post> savedPostHandler(@PathVariable Integer postId,
     		@RequestHeader("Authorization") String jwt) throws Exception {
     	AppUser reqUser = userService.findUserByJwt(jwt);
         Post post = postService.savedPost(postId, reqUser.getId());
-        System.out.println("Otrzymany content: " + post.getContent());
         return new ResponseEntity<Post>(post, HttpStatus.ACCEPTED);
     }
 

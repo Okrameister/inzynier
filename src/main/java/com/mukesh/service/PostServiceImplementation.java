@@ -36,6 +36,7 @@ public class PostServiceImplementation implements PostService{
 		newPost.setCreatedAt(LocalDateTime.now());
 		newPost.setUser(user);
 		newPost.setVideo(post.getVideo());
+		newPost.setGroupId(post.getGroupId());
 		return postRepository.save(newPost);
 	}
 

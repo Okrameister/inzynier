@@ -24,6 +24,8 @@ public class Task {
 
     private Timestamp createdAt;
 
+    private Integer groupId;
+
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Solution> solutions;
@@ -80,5 +82,13 @@ public class Task {
 
     public void setSolutions(List<Solution> solutions) {
         this.solutions = solutions;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 }
