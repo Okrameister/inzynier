@@ -19,8 +19,7 @@ public class AppUser {
 	private String email;
 	private String password;
 	private String gender;
-	private  List<Integer> followers = new ArrayList<>();
-	private List<Integer> followings=new ArrayList<>();
+	private List<Integer> groups=new ArrayList<>();
 	@ManyToMany
 	private List<Post>savedPost =new ArrayList<>();
 	
@@ -104,26 +103,14 @@ public class AppUser {
 
 
 
-	public List<Integer> getFollowers() {
-		return followers;
+	public List<Integer> getGroups() {
+		return groups;
 	}
 
 
 
-	public void setFollowers(List<Integer> followers) {
-		this.followers = followers;
-	}
-
-
-
-	public List<Integer> getFollowings() {
-		return followings;
-	}
-
-
-
-	public void setFollowings(List<Integer> followings) {
-		this.followings = followings;
+	public void setGroups(List<Integer> groups) {
+		this.groups = groups;
 	}
 
 
@@ -141,7 +128,7 @@ public class AppUser {
 
 
 	public AppUser(Integer id, String firstName, String lastName, String email, String password, String gender,
-				   List<Integer> followers, List<Integer> followings, List<Post> savedPost) {
+				   List<Integer> groups, List<Post> savedPost) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -149,8 +136,7 @@ public class AppUser {
 		this.email = email;
 		this.password = password;
 		this.gender = gender;
-		this.followers = followers;
-		this.followings = followings;
+		this.groups = groups;
 		this.savedPost = savedPost;
 	}
 	

@@ -45,18 +45,27 @@ public class UserServiceImplementation implements UserService{
 	}
 
 	@Override
-	public AppUser followUser(Integer reqUserId, Integer userId2) throws Exception {
+	public AppUser addUserGroup(Integer userId, Integer groupId) throws Exception {
 		
-		AppUser reqUser = findUserById(reqUserId);
-		AppUser user2 = findUserById(userId2);
+		AppUser user = findUserById(userId);
+		List<Integer> groups =  user.getGroups();
+
+		if(!groups.contains(groupId)){
+			groups.add(groupId);
+		}
+
+		user.setGroups(groups);
+		userRepository.save(user);
 		
-		user2.getFollowers().add(reqUser.getId());
-		reqUser.getFollowings().add(user2.getId());
-		
-		userRepository.save(reqUser);
-		userRepository.save(user2);
-		
-		return reqUser;
+		return user;
+	}
+
+	@Override
+	public List<Integer> getUserGroup(Integer userId) throws Exception {
+
+		AppUser user = findUserById(userId);
+		List<Integer> groups =  user.getGroups();
+		return groups;
 	}
 
 	@Override

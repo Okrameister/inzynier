@@ -72,6 +72,7 @@ public class PostController {
     		@RequestHeader("Authorization") String jwt) throws Exception {
     	AppUser reqUser = userService.findUserByJwt(jwt);
         Post post = postService.savedPost(postId, reqUser.getId());
+        System.out.println("Otrzymany content: " + post.getContent());
         return new ResponseEntity<Post>(post, HttpStatus.ACCEPTED);
     }
 

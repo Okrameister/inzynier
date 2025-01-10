@@ -48,13 +48,19 @@ public class UserController {
 		return updatedUser;
 	}
 	
-	@PutMapping("/api/users/follow/{userId2}")
-    public AppUser follwUserHandler(@RequestHeader("Authorization") String jwt, @PathVariable Integer userId2) throws Exception {
-	
+	@PutMapping("/api/users/group/{groupId}")
+    public AppUser addUserGroup (@RequestHeader("Authorization") String jwt, @PathVariable Integer groupId) throws Exception {
+
 		AppUser reqUser = userService.findUserByJwt(jwt);
-		AppUser user =userService.followUser(reqUser.getId(), userId2);
+		AppUser user = userService.addUserGroup(reqUser.getId(), groupId);
 		return user;
 		
+	}
+
+	@GetMapping("/api/users/groups/{userId}")
+	public List<Integer>getUserGroups(@PathVariable Integer userId) throws Exception {
+		List<Integer> groups = userService.getUserGroup(userId);
+		return groups;
 	}
 	
 	@GetMapping("/api/users/search")

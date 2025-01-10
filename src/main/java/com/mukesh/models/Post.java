@@ -16,6 +16,7 @@ public class Post {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 	private String caption;
+	private String content;
 	private String image;
 	private String video;
 
@@ -103,11 +104,20 @@ public class Post {
 		this.comments = comments;
 	}
 
-	public Post(Integer id, String caption, String image, String video, AppUser user, Set<AppUser> liked,
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public Post(Integer id, String caption, String content, String image, String video, AppUser user, Set<AppUser> liked,
                 LocalDateTime createdAt, List<Comment> comments) {
 		super();
 		this.id = id;
 		this.caption = caption;
+		this.content = content;
 		this.image = image;
 		this.video = video;
 		this.user = user;

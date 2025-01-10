@@ -16,6 +16,9 @@ import com.mukesh.response.AuthResponse;
 import com.mukesh.service.CustomUserDetailsService;
 import com.mukesh.service.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -46,9 +49,16 @@ public class AuthController {
 		newUser.setFirstName(user.getFirstName());
 		newUser.setLastName(user.getLastName());
 		newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-		
+		newUser.setGender(user.getGender());
+
+		List<Integer> defaultGroup = new ArrayList<>();
+		defaultGroup.add(0);
+		newUser.setGroups(defaultGroup);
+
 		AppUser savedUser = userRepository.save(newUser);
-		
+
+
+
 		Authentication  authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(), savedUser.getPassword());
 		
 		String token = JwtProvider.generateToken(authentication);
