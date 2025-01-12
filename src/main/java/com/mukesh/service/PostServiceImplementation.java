@@ -75,20 +75,7 @@ public class PostServiceImplementation implements PostService{
 		return postRepository.findAll();
 	}
 
-	@Override
-	public Post savedPost(Integer postId, Integer userId) throws Exception {
-		Post post=findPostById(postId);
-		AppUser user = userService.findUserById(userId);
-		
-		if(user.getSavedPost().contains(post)) {
-			user.getSavedPost().remove(post);
-		}
-		else {
-			user.getSavedPost().add(post);
-		}
-		userRepository.save(user);
-		return  post;
-	}
+
 
 	@Override
 	public Post toggleLikePost(Integer postId, Integer userId) throws Exception {

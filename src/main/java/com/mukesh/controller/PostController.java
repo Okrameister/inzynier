@@ -74,13 +74,6 @@ public class PostController {
     }
 
 
-    @PutMapping("api/posts/save/{postId}")
-    public ResponseEntity<Post> savedPostHandler(@PathVariable Integer postId,
-    		@RequestHeader("Authorization") String jwt) throws Exception {
-    	AppUser reqUser = userService.findUserByJwt(jwt);
-        Post post = postService.savedPost(postId, reqUser.getId());
-        return new ResponseEntity<Post>(post, HttpStatus.ACCEPTED);
-    }
 
     @PutMapping("/api/posts/like/{postId}")
     public ResponseEntity<Map<String, Object>> toggleLikePostHandler(@PathVariable Integer postId,

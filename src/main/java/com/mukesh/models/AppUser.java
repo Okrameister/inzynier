@@ -20,10 +20,7 @@ public class AppUser {
 	private String password;
 	private String gender;
 	private List<Integer> groups=new ArrayList<>();
-	@ManyToMany
-	private List<Post>savedPost =new ArrayList<>();
-	
-	
+
 	
 	public AppUser() {
 		
@@ -115,16 +112,6 @@ public class AppUser {
 
 
 
-	public List<Post> getSavedPost() {
-		return savedPost;
-	}
-
-
-
-	public void setSavedPost(List<Post> savedPost) {
-		this.savedPost = savedPost;
-	}
-
 
 
 	public AppUser(Integer id, String firstName, String lastName, String email, String password, String gender,
@@ -137,7 +124,6 @@ public class AppUser {
 		this.password = password;
 		this.gender = gender;
 		this.groups = groups;
-		this.savedPost = savedPost;
 	}
 	
 	
