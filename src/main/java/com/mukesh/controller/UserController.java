@@ -3,17 +3,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import com.mukesh.models.AppUser;
 import com.mukesh.repository.UserRepository;
 import com.mukesh.service.UserService;
-
 
 @RestController
 public class UserController {
@@ -26,8 +21,8 @@ public class UserController {
 
 	@GetMapping("/api/users")
 	public List<AppUser> getUsers() {
-
 		List<AppUser> users = userRepository.findAll();
+		System.out.println(users);
 		return users;
 	}
 
@@ -71,14 +66,42 @@ public class UserController {
 	
 	@GetMapping("/api/users/profile")
 	public AppUser getUserFromToken(@RequestHeader("Authorization") String jwt) {
-		
-//		System.out.println("jwt -------.>>"+ jwt);
+
 		AppUser user = userService.findUserByJwt(jwt);
 		user.setPassword(null);
 		return user;
 	}
-	
-	
+
+	@GetMapping("/api/users/profile/{userId}")
+	public ResponseEntity <AppUser> getUserFromId(
+			@PathVariable String userId,
+			@RequestHeader("Authorization") String authHeader) {
+
+		try {
+			Integer id = Integer.valueOf(userId);
+			AppUser user = userService.findUserById(id);
+
+			if (user == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body(null); // Możesz zwrócić bardziej szczegółowy obiekt z błędem
+			}
+
+			return ResponseEntity.ok(user);
+		} catch (NumberFormatException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(null); // Nieprawidłowe ID
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(null); // Obsługa innych wyjątków
+		}
+	}
+
+
+	@GetMapping("/api/users/role")
+	public String getUserRoleFromToken(@RequestHeader("Authorization") String jwt) {
+		AppUser user = userService.findUserByJwt(jwt);
+		return user.getRole();
+	}
 	
 	
 	

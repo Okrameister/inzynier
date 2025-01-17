@@ -28,6 +28,12 @@
 			<version>42.2.24</version> <!-- Możesz dostosować wersję do najnowszej dostępnej -->
 		</dependency>
 
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -75,7 +81,13 @@
     <scope>runtime</scope>
 </dependency>
 
-			
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+
+
 	</dependencies>
 
 	<build>

@@ -19,6 +19,7 @@ public class AppUser {
 	private String email;
 	private String password;
 	private String gender;
+	private String role;
 	private List<Integer> groups=new ArrayList<>();
 
 	
@@ -98,7 +99,9 @@ public class AppUser {
 		this.gender = gender;
 	}
 
+	public String getRole() {return role;};
 
+	public void setRole(String role) {this.role=role;};
 
 	public List<Integer> getGroups() {
 		return groups;
