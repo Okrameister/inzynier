@@ -50,6 +50,7 @@ public class AuthController {
 		newUser.setLastName(user.getLastName());
 		newUser.setPassword(passwordEncoder.encode(user.getPassword()));
 		newUser.setGender(user.getGender());
+		newUser.setRole("USER");
 
 		List<Integer> defaultGroup = new ArrayList<>();
 		defaultGroup.add(0);
