@@ -63,21 +63,29 @@ public class AuthController {
 		Authentication  authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(), savedUser.getPassword());
 		
 		String token = JwtProvider.generateToken(authentication);
-		AuthResponse res = new AuthResponse(token , "Register success");
+		AuthResponse res = new AuthResponse(token , "Register success", user.getId());
 		return res;
 	}
-	
+
 	@PostMapping("/signin")
 	public AuthResponse signIn(@RequestBody LoginRequest loginRequest ) {
-		
+
 		Authentication authentication = authenticate(loginRequest.getEmail(), loginRequest.getPassword());
 		String token = JwtProvider.generateToken(authentication);
-		AuthResponse res = new AuthResponse(token , "Login success");
+
+		// Pobranie użytkownika na podstawie adresu e-mail
+		AppUser user = userRepository.findByEmail(loginRequest.getEmail());
+		if (user == null) {
+			throw new BadCredentialsException("User not found");
+		}
+
+		// Tworzenie odpowiedzi z tokenem i userId
+		AuthResponse res = new AuthResponse(token, "Login success", user.getId());
 		return res;
 	}
 
 	private Authentication authenticate(String email, String password) {
-		
+
 		UserDetails  userDetails = customUserDetails.loadUserByUsername(email);
 		if(userDetails== null) {
 			throw new BadCredentialsException("invalid username");
@@ -85,20 +93,20 @@ public class AuthController {
 		if(!passwordEncoder.matches(password, userDetails.getPassword())) {
 			throw new BadCredentialsException("Password not match");
 		}
-	
-	
+
+
 		return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
 
 }

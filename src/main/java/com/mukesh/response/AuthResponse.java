@@ -4,6 +4,7 @@ public class AuthResponse {
 
 	private String token;
 	private String message;
+	private Integer userId;
 	
 	public AuthResponse() {
 		// TODO Auto-generated constructor stub
@@ -25,10 +26,11 @@ public class AuthResponse {
 		this.message = message;
 	}
 
-	public AuthResponse(String token, String message) {
+	public AuthResponse(String token, String message, Integer userId) {
 		super();
 		this.token = token;
 		this.message = message;
+		this.userId = userId;
 	}
 	
 }
