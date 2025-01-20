@@ -6,6 +6,7 @@ public class ConversationRequest {
     private List<Integer> userIds;
     private String name;
     private Boolean isGroup;
+    private Long eventId;
 
     // Gettery i settery
 
@@ -32,4 +33,13 @@ public class ConversationRequest {
     public void setIsGroup(Boolean isGroup) {
         this.isGroup = isGroup;
     }
+
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
+    }
+
 }

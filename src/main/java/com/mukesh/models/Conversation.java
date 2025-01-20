@@ -14,6 +14,7 @@ public class Conversation {
 
     private String name;
     private Boolean isGroup;
+    private Long eventId;
 
     @ManyToMany
     @JoinTable(
@@ -45,6 +46,14 @@ public class Conversation {
         return participants;
     }
 
+    public Long getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -60,4 +69,6 @@ public class Conversation {
     public void setParticipants(Set<AppUser> participants) {
         this.participants = participants;
     }
+
+
 }

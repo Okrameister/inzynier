@@ -2,6 +2,7 @@ package com.mukesh.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -111,6 +112,11 @@ public class UserServiceImplementation implements UserService{
 		AppUser user  =userRepository.findByEmail(email);
 		return user;
 	}
-	
+
+	public List<Integer> getAllUserIds() {
+		return userRepository.findAll().stream()
+				.map(AppUser::getId)
+				.collect(Collectors.toList());
+	}
 
 }

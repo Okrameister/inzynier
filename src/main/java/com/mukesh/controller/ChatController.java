@@ -30,7 +30,7 @@ public class ChatController {
         if (!userIds.contains(user.getId())) {
             userIds.add(user.getId()); // Dodaj siebie do uczestników, jeśli nie został już dodany
         }
-        return conversationService.createConversation(userIds, request.getName(), request.getIsGroup());
+        return conversationService.createConversation(userIds, request.getName(), request.getIsGroup(), request.getEventId());
     }
 
     @GetMapping("/conversations")

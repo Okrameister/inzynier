@@ -15,10 +15,11 @@ public class ConversationService {
     @Autowired
     private UserRepository userRepository;
 
-    public Conversation createConversation(List<Integer> userIds, String name, Boolean isGroup) throws Exception {
+    public Conversation createConversation(List<Integer> userIds, String name, Boolean isGroup, Long eventId) throws Exception {
         Conversation conversation = new Conversation();
         conversation.setIsGroup(isGroup);
         conversation.setName(name);
+        conversation.setEventId(eventId);
 
         List<AppUser> users = userRepository.findAllById(userIds);
         if (users.size() < userIds.size()) {

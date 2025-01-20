@@ -17,4 +17,5 @@ public interface UserService {
 	public AppUser addUserGroup(Integer userId, Integer groupId) throws Exception;
 
     List<Integer> getUserGroup(Integer userId) throws Exception;
+	public List<Integer> getAllUserIds();
 }
